@@ -5,6 +5,7 @@
 
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace sdx
 {
@@ -30,6 +31,10 @@ namespace sdx
 	public:
 		bool equal(const encoding& encoding) const noexcept;
 		bool equal(const ptr& encoding) const noexcept;
+
+	public:
+		virtual std::vector<std::uint8_t> convert(const string& string) const = 0;
+		virtual std::size_t converted_length(const string& string) const = 0;
 
 	public:
 		virtual string name() const = 0;
