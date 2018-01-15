@@ -1,6 +1,8 @@
 #ifndef SDX_HEADER_ENCODING_HPP
 #define SDX_HEADER_ENCODING_HPP
 
+#include <sdx/string.hpp>
+
 #include <cstdint>
 #include <memory>
 
@@ -30,6 +32,7 @@ namespace sdx
 		bool equal(const ptr& encoding) const noexcept;
 
 	public:
+		virtual string name() const = 0;
 		virtual std::uint16_t codepage() const noexcept = 0;
 	};
 }
