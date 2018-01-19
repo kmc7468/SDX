@@ -5,8 +5,15 @@
 
 namespace sdx
 {
-	class string : public std::string
+	class string :
+#if !defined(_UNICODE) && !defined(UNICODE)
+		public std::string
+#else
+		public std::wstring
+#endif
 	{};
+
+	using char_t = string::value_type;
 }
 
 #endif
