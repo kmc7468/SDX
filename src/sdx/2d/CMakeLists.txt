@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(SDXBasic CXX)
+project(SDX2D CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
@@ -27,5 +27,7 @@ if(COMPILE_INTO_DYNAMIC_LIBRARY)
 else(COMPILE_INTO_DYNAMIC_LIBRARY)
 	add_library(${PROJECT_NAME} STATIC ${SOURCE_LIST})
 endif(COMPILE_INTO_DYNAMIC_LIBRARY)
+
+target_link_libraries(${PROJECT_NAME} SDXBasic)
 
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
