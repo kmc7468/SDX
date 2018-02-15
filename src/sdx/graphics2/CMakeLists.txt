@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1.0)
-project(SDX2D CXX)
+project(SDXGraphics2 CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 
