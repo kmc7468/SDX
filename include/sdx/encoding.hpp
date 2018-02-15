@@ -1,5 +1,6 @@
 #ifndef SDX_HEADER_ENCODING_HPP
 #define SDX_HEADER_ENCODING_HPP
+#include <sdx/config.hpp>
 
 #include <sdx/string.hpp>
 
@@ -8,7 +9,7 @@
 
 namespace sdx
 {
-	class encoding
+	class SDX_EXPORT encoding
 	{
 	public:
 		using ptr = std::shared_ptr<encoding>;
