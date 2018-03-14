@@ -5,7 +5,6 @@
 #include <array>
 #include <cstddef>
 #include <stdexcept>
-#include <utility>
 
 namespace sdx
 {
@@ -28,24 +27,24 @@ namespace sdx
 			numeric_allocator() = default;
 			numeric_allocator(const my_& allocator)
 			{
-				allocator.copy(*this);
+				allocator.copy_to(*this);
 			}
 			numeric_allocator(my_&& allocator) noexcept
 			{
-				allocator.move(std::move(*this));
+				allocator.move_to(*this);
 			}
 			~numeric_allocator() = default;
 
 		public:
 			my_& operator=(const my_& allocator)
 			{
-				allocator.copy(*this);
+				allocator.copy_to(*this);
 
 				return *this;
 			}
 			my_& operator=(my_&& allocator) noexcept
 			{
-				allocator.move(std::move(*this));
+				allocator.move_to(*this);
 
 				return *this;
 			}
@@ -79,17 +78,17 @@ namespace sdx
 			{}
 			void reallocate(std::size_t)
 			{}
-			void deallocate(std::size_t)
+			void deallocate()
 			{}
 			void fill_zero()
 			{
 				std::fill(data_, data_ + size_constant, 0);
 			}
-			void copy(my_& allocator) const
+			void copy_to(my_& allocator) const
 			{
-				move(allocator);
+				move_to(allocator);
 			}
-			void move(my_&& allocator) const noexcept
+			void move_to(my_&& allocator) noexcept
 			{
 				for (std::size_t i = 0; i < size_constant; ++i)
 				{
