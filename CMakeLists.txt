@@ -8,6 +8,3 @@ set(USE_ONLY_MULTIBYTE_STRINGS OFF CACHE BOOL "If enabled, SDX will use only mul
 add_subdirectory(src/sdx/basic)
 add_subdirectory(src/sdx/graphics2)
 add_subdirectory(src/sdx/math)
-
-file(GLOB HEADER_LIST ${INCLUDE_DIR}/sdx/*.hpp ${INCLUDE_DIR}/sdx/macro_utility/*.hpp)
-install(FILES ${HEADER_LIST} DESTINATION include/sdx)
