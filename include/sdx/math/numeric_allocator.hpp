@@ -1,9 +1,11 @@
 #ifndef SDX_HEADER_MATH_NUMERIC_ALLOCATOR_HPP
 #define SDX_HEADER_MATH_NUMERIC_ALLOCATOR_HPP
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <stdexcept>
+#include <utility>
 
 namespace sdx
 {
@@ -15,11 +17,38 @@ namespace sdx
 		public:
 			using block_type = Block_;
 
+		private:
+			using my_ = numeric_allocator<Block_, Size_>;
+
 		public:
 			static constexpr std::size_t size_constant = Size_;
 			static constexpr bool is_dynamic = false;
 
 		public:
+			numeric_allocator() = default;
+			numeric_allocator(const my_& allocator)
+			{
+				allocator.copy(*this);
+			}
+			numeric_allocator(my_&& allocator) noexcept
+			{
+				allocator.move(std::move(*this));
+			}
+			~numeric_allocator() = default;
+
+		public:
+			my_& operator=(const my_& allocator)
+			{
+				allocator.copy(*this);
+
+				return *this;
+			}
+			my_& operator=(my_&& allocator) noexcept
+			{
+				allocator.move(std::move(*this));
+
+				return *this;
+			}
 			const block_type& operator[](std::size_t index) const noexcept
 			{
 				return data_[index];
@@ -46,6 +75,27 @@ namespace sdx
 			}
 
 		public:
+			void allocate(std::size_t)
+			{}
+			void reallocate(std::size_t)
+			{}
+			void deallocate(std::size_t)
+			{}
+			void fill_zero()
+			{
+				std::fill(data_, data_ + size_constant, 0);
+			}
+			void copy(my_& allocator) const
+			{
+				move(allocator);
+			}
+			void move(my_&& allocator) const noexcept
+			{
+				for (std::size_t i = 0; i < size_constant; ++i)
+				{
+					allocator.data_[i] = data_[i];
+				}
+			}
 			bool allocated() const noexcept
 			{
 				return true;
