@@ -34,4 +34,8 @@ endif(COMPILE_INTO_DYNAMIC_LIBRARY)
 
 target_link_libraries(${PROJECT_NAME} SDXBasic)
 
+file(GLOB HEADER_LIST_MATH ${INCLUDE_DIR}/sdx/math/*.hpp)
+
+install(FILES ${HEADER_LIST_MATH} DESTINATION include/sdx/math)
+
 install(TARGETS ${PROJECT_NAME} DESTINATION lib)
