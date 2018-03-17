@@ -466,7 +466,190 @@ namespace sdx
 		template<typename Block_>
 		class numeric_allocator<Block_, 0>
 		{
-			// TODO
+		public:
+			using value_type = Block_;
+			using iterator = details::math::numeric_allocator_iterator_<Block_>;
+			using const_iterator = details::math::numeric_allocator_const_iterator_<Block_>;
+			using reverse_iterator = std::reverse_iterator<iterator>;
+			using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+		private:
+			using my_ = numeric_allocator<Block_, 0>;
+
+		public:
+			static constexpr std::size_t size_constant = 0;
+			static constexpr bool is_dynamic = true;
+
+		public:
+			numeric_allocator() = default;
+			numeric_allocator(const my_& allocator)
+			{
+				allocator.copy_to(*this);
+			}
+			numeric_allocator(my_&& allocator) noexcept
+			{
+				allocator.move_to(*this);
+			}
+			~numeric_allocator() = default;
+
+		public:
+			my_ & operator=(const my_& allocator)
+			{
+				allocator.copy_to(*this);
+
+				return *this;
+			}
+			my_& operator=(my_&& allocator) noexcept
+			{
+				allocator.move_to(*this);
+
+				return *this;
+			}
+			const value_type& operator[](std::size_t index) const noexcept
+			{
+				return data_[index];
+			}
+			value_type& operator[](std::size_t index) noexcept
+			{
+				return data_[index];
+			}
+
+		public:
+			const value_type& at(std::size_t index) const
+			{
+				if (index >= size_constant)
+					throw std::out_of_range("'index' is out of range.");
+
+				return operator[](index);
+			}
+			value_type& at(std::size_t index)
+			{
+				if (index >= size_constant)
+					throw std::out_of_range("'index' is out of range.");
+
+				return operator[](index);
+			}
+
+		public:
+			void allocate(std::size_t new_size)
+			{
+				if (size_ == 0)
+				{
+					data_ = reinterpret_cast<value_type*>(std::malloc(sizeof(value_type) * new_size));
+					size_ = new_size;
+				}
+				else
+				{
+					reallocate(new_size);
+				}
+			}
+			void reallocate(std::size_t new_size)
+			{
+				if (size_ == 0)
+				{
+					allocate(new_size);
+				}
+				else
+				{
+					data_ = reinterpret_cast<value_type*>(std::realloc(data_, sizeof(value_type) * new_size));
+					size_ = new_size;
+				}
+			}
+			void deallocate()
+			{
+				if (data != nullptr)
+				{
+					std::free(data_);
+
+					data_ = nullptr;
+					size_ = 0;
+				}
+			}
+			void fill_zero()
+			{
+				std::fill(data_, data_ + size_, 0);
+			}
+			void copy_to(my_& allocator) const
+			{
+				allocator.data_ = reinterpret_cast<value_type*>(std::malloc(sizeof(value_type) * size_));
+				allocator.size_ = size_;
+
+				std::copy(data_, data_ + size_, allocator.data_);
+			}
+			void move_to(my_&& allocator) noexcept
+			{
+				allocator.data_ = data_;
+				allocator.size_ = size_;
+
+				data_ = nullptr;
+				size_ = 0;
+			}
+			bool allocated() const noexcept
+			{
+				return data_ != nullptr;
+			}
+			bool reallocatable() const noexcept
+			{
+				return true;
+			}
+			const_iterator begin() const noexcept
+			{
+				return data_;
+			}
+			iterator begin() noexcept
+			{
+				return data_;
+			}
+			const_iterator cbegin() const noexcept
+			{
+				return data_;
+			}
+			const_iterator end() const noexcept
+			{
+				return data_ + size_;
+			}
+			iterator end() noexcept
+			{
+				return data_ + size_;
+			}
+			const_iterator cend() const noexcept
+			{
+				return data_ + size_;
+			}
+			const_reverse_iterator rbegin() const noexcept
+			{
+				return end();
+			}
+			reverse_iterator rbegin() noexcept
+			{
+				return end();
+			}
+			const_reverse_iterator crbegin() const noexcept
+			{
+				return end();
+			}
+			const_reverse_iterator rend() const noexcept
+			{
+				return begin();
+			}
+			reverse_iterator rend() noexcept
+			{
+				return begin();
+			}
+			const_reverse_iterator crend() const noexcept
+			{
+				return begin();
+			}
+
+		public:
+			std::size_t size() const noexcept
+			{
+				return size_;
+			}
+
+		private:
+			value_type* data_ = nullptr;
+			std::size_t size_ = 0;
 		};
 	}
 }
