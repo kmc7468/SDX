@@ -16,10 +16,6 @@ namespace sdx
 			template<typename Block_>
 			class numeric_allocator_iterator_
 			{
-				template<typename Block_>
-				friend numeric_allocator_iterator_<Block_> operator+(typename numeric_allocator_iterator_<Block_>::difference_type value,
-					const numeric_allocator_iterator_<Block_>& iterator) noexcept;
-
 			public:
 				using difference_type = std::ptrdiff_t;
 				using value_type = Block_;
@@ -34,6 +30,9 @@ namespace sdx
 
 			public:
 				numeric_allocator_iterator_() = default;
+				numeric_allocator_iterator_(value_type* data) noexcept
+					: data_(data)
+				{}
 				numeric_allocator_iterator_(const my_& iterator) noexcept
 					: data_(iterator.data_)
 				{}
@@ -41,11 +40,6 @@ namespace sdx
 					: data_(iterator.data_)
 				{}
 				~numeric_allocator_iterator_() = default;
-				
-			private:
-				numeric_allocator_iterator_(value_type* data) noexcept
-					: data_(data)
-				{}
 
 			public:
 				my_& operator=(const my_& iterator) noexcept
@@ -157,6 +151,16 @@ namespace sdx
 					return *data_;
 				}
 
+			public:
+				const value_type* data() const noexcept
+				{
+					return data_;
+				}
+				value_type* data() noexcept
+				{
+					return data_;
+				}
+
 			private:
 				value_type* data_ = nullptr;
 			};
@@ -167,7 +171,7 @@ namespace sdx
 			{
 				decltype(value) rhs = value * sizeof(Block_);
 
-				return reinterpret_cast<Block_*>(reinterpret_cast<std::uintptr_t>(iterator.data_) + rhs);
+				return reinterpret_cast<Block_*>(reinterpret_cast<std::uintptr_t>(iterator.data()) + rhs);
 			}
 		}
 	}
