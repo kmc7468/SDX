@@ -557,7 +557,7 @@ namespace sdx
 			}
 			void deallocate()
 			{
-				if (data != nullptr)
+				if (data_ != nullptr)
 				{
 					std::free(data_);
 
