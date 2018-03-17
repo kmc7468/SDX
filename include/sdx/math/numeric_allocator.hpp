@@ -152,6 +152,15 @@ namespace sdx
 				}
 
 			public:
+				void swap(my_& iterator)
+				{
+					value_type* temp = data_;
+
+					data_ = iterator.data_;
+					iterator.data_ = temp;
+				}
+
+			public:
 				const value_type* data() const noexcept
 				{
 					return data_;
@@ -305,6 +314,8 @@ namespace sdx
 			using value_type = Block_;
 			using iterator = details::math::numeric_allocator_iterator_<Block_>;
 			using const_iterator = details::math::numeric_allocator_const_iterator_<Block_>;
+			using reverse_iterator = std::reverse_iterator<iterator>;
+			using const_reverse_iterator = std::reverse_iterator<const_iterator>;
 
 		private:
 			using my_ = numeric_allocator<Block_, Size_>;
@@ -416,6 +427,30 @@ namespace sdx
 			const_iterator cend() const noexcept
 			{
 				return &data_[size_constant];
+			}
+			const_reverse_iterator rbegin() const noexcept
+			{
+				return end();
+			}
+			reverse_iterator rbegin() noexcept
+			{
+				return end();
+			}
+			const_reverse_iterator crbegin() const noexcept
+			{
+				return end();
+			}
+			const_reverse_iterator rend() const noexcept
+			{
+				return begin();
+			}
+			reverse_iterator rend() noexcept
+			{
+				return begin();
+			}
+			const_reverse_iterator crend() const noexcept
+			{
+				return begin();
 			}
 
 		public:
