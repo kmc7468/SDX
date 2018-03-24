@@ -152,7 +152,7 @@ namespace sdx
 				}
 
 			public:
-				void swap(my_& iterator)
+				void swap(my_& iterator) noexcept
 				{
 					value_type* temp = data_;
 
@@ -452,6 +452,10 @@ namespace sdx
 			{
 				return begin();
 			}
+			void swap(my_& allocator) noexcept
+			{
+				std::swap(data_, allocator.data_);
+			}
 
 		public:
 			std::size_t size() const noexcept
@@ -639,6 +643,11 @@ namespace sdx
 			const_reverse_iterator crend() const noexcept
 			{
 				return begin();
+			}
+			void swap(my_& allocator) noexcept
+			{
+				std::swap(data_, allocator.data_);
+				std::swap(size_, allocator.size_);
 			}
 
 		public:

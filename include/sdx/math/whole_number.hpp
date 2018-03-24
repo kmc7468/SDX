@@ -45,6 +45,12 @@ namespace sdx
 				return *this;
 			}
 
+		public:
+			void swap(my_& number) noexcept
+			{
+				allocator_.swap(number.allocator_);
+			}
+
 		private:
 			allocator_type allocator_;
 		};
